@@ -24,4 +24,5 @@ class grad_customGear {
   allowSimpleScopes = 0;
   allowMagnifyingScopes = 0;
   allowMarksmanScopes = 0;
+  actionsOnMissionStart = 0;
 };
