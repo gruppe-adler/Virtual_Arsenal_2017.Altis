@@ -1,0 +1,7 @@
+{
+    "name": "Virtual_Arsenal_2016.Altis",
+    "version": "1.0.0",
+    "dependencies": {
+        "grad-customGear": "^1.0.0"
+    }
+}
