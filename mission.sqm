@@ -74,7 +74,6 @@ addons[]=
 	"A3_Structures_F_Items_Vessels",
 	"CUP_CAStructures_E_Misc_Misc_Interier",
 	"A3_Supplies_F_Heli_CargoNets",
-	"PRAA_statics",
 	"CUP_A2_EditorObjects",
 	"CUP_CAMisc_E_WF",
 	"A3_Structures_F_Mil_Cargo",
@@ -104,7 +103,7 @@ class AddonsMetaData
 {
 	class List
 	{
-		items=61;
+		items=60;
 		class Item0
 		{
 			className="A3_Ui_F";
@@ -371,8 +370,10 @@ class AddonsMetaData
 		};
 		class Item40
 		{
-			className="PRAA_statics";
-			name="PRAA_statics";
+			className="A3_Structures_F_Exp_Infrastructure";
+			name="Arma 3 Apex - Infrastructure Objects";
+			author="Bohemia Interactive";
+			url="https://www.arma3.com";
 		};
 		class Item41
 		{
@@ -489,13 +490,6 @@ class AddonsMetaData
 		{
 			className="CUP_WaterVehicles_LHD";
 			name="CUP_WaterVehicles_LHD";
-		};
-		class Item60
-		{
-			className="A3_Structures_F_Exp_Infrastructure";
-			name="Arma 3 Apex - Infrastructure Objects";
-			author="Bohemia Interactive";
-			url="https://www.arma3.com";
 		};
 	};
 };
@@ -13352,7 +13346,7 @@ class Mission
 			{
 			};
 			id=537;
-			type="PRAA_statics_fuelBarrels";
+			type="CargoNet_01_barrels_F";
 			atlOffset=0.025714874;
 		};
 		class Item235
