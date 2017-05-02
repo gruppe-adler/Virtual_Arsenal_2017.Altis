@@ -28,3 +28,7 @@ if (hasInterface) then {
 
 
 AR3PLAY_ENABLE_REPLAY = false;
+
+// Init für Heligame
+GRAD_Heligame_inProgress = false;
+call compile preprocessfilelinenumbers "SHK_pos\shk_pos_init.sqf";

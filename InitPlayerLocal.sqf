@@ -84,3 +84,15 @@ if (player in (call bis_fnc_listcuratorplayers)) then {
 /////////////////////////////////////////////////////////
 /////////////////////End FPS Script//////////////////////
 /////////////////////////////////////////////////////////
+
+// Playerinit für Heligame Addaction
+[] spawn {
+    waitUntil {!isNull player};
+    player addAction [
+      "Heligame!",
+      "heligame.sqf",
+      nil, 1.5, true, true,
+      "",
+      "!GRAD_Heligame_inProgress && (vehicle player) isKindOf 'Air'"
+    ];
+};
