@@ -25,10 +25,21 @@ if (hasInterface) then {
 };
 */
 
+// Init für Heligame
+call compile preprocessfilelinenumbers "SHK_pos\shk_pos_init.sqf";
 
+// Playerinit für Heligame Addaction
+GRAD_Heligame_inProgress = false;
+[] spawn {
+    waitUntil {!isNull player};
+    sleep 5; // Sicherstellen, dass shk_pos_init.sqf kompiliert und die Variablen vergeben sind
+    player addAction [
+      "Heligame!",
+      "heligame.sqf",
+      nil, 1.5, true, true,
+      "",
+      "!GRAD_Heligame_inProgress && (vehicle player) isKindOf 'Air'"
+    ];
+};
 
 AR3PLAY_ENABLE_REPLAY = false;
-
-// Init für Heligame
-GRAD_Heligame_inProgress = false;
-call compile preprocessfilelinenumbers "SHK_pos\shk_pos_init.sqf";
