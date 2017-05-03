@@ -11,7 +11,7 @@ GRAD_heligame_fnc_lz ={
      if (!isNil "GRAD_smoke_trg") then {deleteVehicle GRAD_smoke_trg};
      if (!isNil "GRAD_lz_trg") then {deleteVehicle GRAD_lz_trg};
      if (alive GRAD_lz_smoke) then {deleteVehicle GRAD_lz_smoke};
-     deleteMarker "Start";
+     deleteMarker str _start_marker_pos;
      deleteMarker "LZ";
      GRAD_Heligame_inProgress = false;
      [_handle] call CBA_fnc_removePerFrameHandler;
@@ -22,7 +22,8 @@ GRAD_heligame_fnc_lz ={
   GRAD_lz_pos = [[9300, 17109], random 10000, random 360, 0, [1, 1000]] call SHK_pos;
 
   // Marker auf die Startposition setzen.
-  _start_marker = createMarker ["Start", player];
+  start_marker_pos = getpos player;
+  _start_marker = createMarker [str start_marker_pos, player];
   _start_marker SetMarkerShape "ICON";
   _start_marker setMarkerType "hd_start";
   _start_marker setMarkerColor "colorBLUFOR";
@@ -32,7 +33,7 @@ GRAD_heligame_fnc_lz ={
   _start_marker setMarkerDir _marker_winkel;
 
   // Marker auf die Smokeposition setzen.
-  _lz_marker = createMarker ["LZ", GRAD_lz_pos];
+  _lz_marker = createMarker [str GRAD_lz_pos, GRAD_lz_pos];
   _lz_marker setMarkerShape "ICON";
   _lz_marker setMarkerType "hd_pickup";
   _lz_marker setMarkerColor "colorBLUFOR";
@@ -75,8 +76,8 @@ GRAD_fnc_smokespawn ={
       "hint 'LZ erfolgreich!';
         if (!isNil ""GRAD_smoke_trg"") then {deleteVehicle GRAD_smoke_trg};
         deleteVehicle GRAD_lz_smoke;
-        deleteMarker 'Start';
-        deleteMarker 'LZ';
+        deleteMarker str start_marker_pos;
+        deleteMarker str GRAD_lz_pos;
         call GRAD_heligame_fnc_lz;
         GRAD_smokeTimer = diag_tickTime
       ",
