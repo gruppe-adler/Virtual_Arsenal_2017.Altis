@@ -1,22 +1,29 @@
+GRAD_smokeTimer = diag_tickTime;
+hint "Heligame beginnt!";
+GRAD_Heligame_inProgress = true;
+
+// Loop, um nach 10 Minuten den Server aufzuräumen.
+[
+  {
+  params ["_args", "_handle"];
+
+  if (diag_tickTime < GRAD_smokeTimer + 600) exitWith {};
+
+  // Alles löschen
+  hint "Heligame ist vorbei!";
+  if (!isNil "GRAD_smoke_trg") then {deleteVehicle GRAD_smoke_trg};
+  if (!isNil "GRAD_lz_trg") then {deleteVehicle GRAD_lz_trg};
+  if (alive GRAD_lz_smoke) then {deleteVehicle GRAD_lz_smoke};
+  deleteMarker str start_marker_pos;
+  deleteMarker str GRAD_lz_pos;
+  GRAD_Heligame_inProgress = false;
+  [_handle] call CBA_fnc_removePerFrameHandler;
+
+  },1,[]] remoteExec ["CBA_fnc_addPerFrameHandler", -2
+];
+
+
 GRAD_heligame_fnc_lz ={
-
-  // Loop, um nach 10 Minuten den Server aufzuräumen.
-  GRAD_Heligame_perFrame = [{
-     params ["_args", "_handle"];
-
-     if (diag_tickTime < GRAD_smokeTimer + 600) exitWith {};
-
-     // Alles löschen
-     hint "Heligame ist vorbei!";
-     if (!isNil "GRAD_smoke_trg") then {deleteVehicle GRAD_smoke_trg};
-     if (!isNil "GRAD_lz_trg") then {deleteVehicle GRAD_lz_trg};
-     if (alive GRAD_lz_smoke) then {deleteVehicle GRAD_lz_smoke};
-     deleteMarker str _start_marker_pos;
-     deleteMarker "LZ";
-     GRAD_Heligame_inProgress = false;
-     [_handle] call CBA_fnc_removePerFrameHandler;
-
-     },1,[]] call CBA_fnc_addPerFrameHandler;
 
   // Random Position für Smoke suchen.
   GRAD_lz_pos = [[9300, 17109], random 10000, random 360, 0, [1, 1000]] call SHK_pos;
@@ -86,13 +93,4 @@ GRAD_fnc_smokespawn ={
   GRAD_lz_trg setTriggerTimeout [10, 15, 20, true];
 };
 
-GRAD_smokeTimer = diag_tickTime;
-hint "Heligame beginnt!";
-GRAD_Heligame_inProgress = true;
-/*
-GRAD_Heligame_centermarker = createMarker ["Center", [16914, 17109]];
-GRAD_Heligame_centermarker SetMarkerShape "ICON";
-GRAD_Heligame_centermarker setMarkerType "hd_unknown";
-GRAD_Heligame_centermarker setMarkerColor "colorBLUFOR";
-GRAD_Heligame_centermarker setMarkerAlpha 0; */
 call GRAD_heligame_fnc_lz;

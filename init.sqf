@@ -30,16 +30,11 @@ call compile preprocessfilelinenumbers "SHK_pos\shk_pos_init.sqf";
 
 // Playerinit für Heligame Addaction
 GRAD_Heligame_inProgress = false;
-[] spawn {
+[] spawn
+{
     waitUntil {!isNull player};
     sleep 5; // Sicherstellen, dass shk_pos_init.sqf kompiliert und die Variablen vergeben sind
-    player addAction [
-      "Heligame!",
-      "heligame.sqf",
-      nil, 1.5, true, true,
-      "",
-      "!GRAD_Heligame_inProgress && (vehicle player) isKindOf 'Air'"
-    ];
+    [[], {player addAction ["Heligame!", "heligame.sqf", nil, 1.5, true, true, "", "!GRAD_Heligame_inProgress && (vehicle player) isKindOf 'Air'"];}] remoteExec ["call", -2, true]
 };
 
 AR3PLAY_ENABLE_REPLAY = false;
