@@ -26,7 +26,7 @@ _GRAD_lz_smoke = "";
 ];
 
 GRAD_heligame_fnc_lz ={
-
+  params ["_GRAD_lz_trg"];
   // Random Position für Smoke suchen.
   _GRAD_lz_pos = [[9300, 17109], random 5000, random 360, 0, [1, 1000]] call SHK_pos;
 
@@ -53,18 +53,14 @@ GRAD_heligame_fnc_lz ={
   _GRAD_smoke_trg setTriggerActivation ["ANY", "PRESENT", false];
   _GRAD_smoke_trg setTriggerStatements [
   "this",
-  format ["if (!isNil ""_GRAD_lz_trg"") then (deleteVehicle _GRAD_lz_trg);
-  [%1, %2, %3, %4] call GRAD_fnc_smokespawn", _GRAD_lz_pos, _GRAD_smoke_trg, _start_marker_pos, _start_marker_pos],
-  /*
-  "format ["if (!isNil ""_GRAD_lz_trg"") then {deleteVehicle _GRAD_lz_trg};
-    [%1, %2, %3, %4] call GRAD_fnc_smokespawn;"],
-    _GRAD_lz_pos, _GRAD_smoke_trg, _start_marker_pos, _start_marker_pos",
-  */
+  format ["if (!isNil ""_GRAD_lz_trg"") then {deleteVehicle _GRAD_lz_trg};
+  [%1, %2, %3, %4] call GRAD_fnc_smokespawn", _GRAD_lz_pos, _start_marker_pos, _start_marker_pos, _GRAD_smoke_trg],
   "this"
   ];
 };
 
 GRAD_fnc_smokespawn ={
+  params ["_GRAD_lz_pos", "_start_marker_pos", "_start_marker_pos", "_GRAD_smoke_trg"];
 
   // Zufällige Smokefarbe wählen.
   _smokeColor = selectRandom
@@ -87,7 +83,17 @@ GRAD_fnc_smokespawn ={
   _GRAD_lz_trg setTriggerActivation ["ANY", "PRESENT", false];
   _GRAD_lz_trg setTriggerStatements
     [
-      "this", "this",
+      "this",
+      format ["
+        hint 'LZ erfolgreich!';
+        if (!isNil ""_GRAD_smoke_trg"") then {deleteVehicle _GRAD_smoke_trg};
+        deleteVehicle _GRAD_lz_smoke;
+        deleteMarker str _start_marker_pos;
+        deleteMarker str _GRAD_lz_pos;
+        GRAD_smokeTimer = diag_tickTime
+        [%1] call GRAD_heligame_fnc_lz
+      ", _GRAD_lz_trg],
+/*
       "hint 'LZ erfolgreich!';
         if (!isNil ""_GRAD_smoke_trg"") then {deleteVehicle _GRAD_smoke_trg};
         deleteVehicle _GRAD_lz_smoke;
@@ -96,6 +102,7 @@ GRAD_fnc_smokespawn ={
         forman[_GRAD_lz_trg] call GRAD_heligame_fnc_lz;
         GRAD_smokeTimer = diag_tickTime
       ",
+*/
       "this"
     ];
   _GRAD_lz_trg setTriggerTimeout [10, 15, 20, true];
