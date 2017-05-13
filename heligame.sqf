@@ -51,16 +51,18 @@ GRAD_heligame_fnc_lz ={
   _GRAD_smoke_trg = createTrigger ["EmptyDetector", _GRAD_lz_pos];
   _GRAD_smoke_trg setTriggerArea [1000, 1000, 0, false, 500];
   _GRAD_smoke_trg setTriggerActivation ["ANY", "PRESENT", false];
-  _GRAD_smoke_trg setTriggerStatements [
-  "this",
-  format ["if (!isNil ""_GRAD_lz_trg"") then {deleteVehicle _GRAD_lz_trg};
-  [%1, %2, %3, %4] call GRAD_fnc_smokespawn", _GRAD_lz_pos, _start_marker_pos, _start_marker_pos, _GRAD_smoke_trg],
-  "this"
+  _GRAD_smoke_trg setVariable ["_GRAD_localtemp", _GRAD_lz_trg];
+  _GRAD_smoke_trg setTriggerStatements
+  [
+    "this",
+    format ["if (!isNil {thisTrigger getVariable '_GRAD_localtemp'}) then {deleteVehicle _GRAD_lz_trg};
+    [%1, %2, thisTrigger] call GRAD_fnc_smokespawn", _GRAD_lz_pos, _start_marker_pos],
+    "this"
   ];
 };
 
 GRAD_fnc_smokespawn ={
-  params ["_GRAD_lz_pos", "_start_marker_pos", "_start_marker_pos", "_GRAD_smoke_trg"];
+  params ["_GRAD_lz_pos", "_start_marker_pos", "_GRAD_smoke_trg"];
 
   // Zufällige Smokefarbe wählen.
   _smokeColor = selectRandom
@@ -81,28 +83,18 @@ GRAD_fnc_smokespawn ={
   _GRAD_lz_trg = createTrigger ["EmptyDetector", _GRAD_lz_pos];
   _GRAD_lz_trg setTriggerArea [30, 30, 0, false, 30];
   _GRAD_lz_trg setTriggerActivation ["ANY", "PRESENT", false];
+  _GRAD_ls_trg setVariable ["_GRAD_local_start_marker", _start_marker_pos];
+  _GRAD_ls_trg setVariable ["_GRAD_local_lz_marker", _GRAD_lz_pos];
+  _GRAD_lz_trg setVariable ["_GRAD_local_smoke", _GRAD_smoke_trg];
   _GRAD_lz_trg setTriggerStatements
     [
       "this",
-      format ["
-        hint 'LZ erfolgreich!';
-        if (!isNil ""_GRAD_smoke_trg"") then {deleteVehicle _GRAD_smoke_trg};
-        deleteVehicle _GRAD_lz_smoke;
-        deleteMarker str _start_marker_pos;
-        deleteMarker str _GRAD_lz_pos;
-        GRAD_smokeTimer = diag_tickTime
-        [%1] call GRAD_heligame_fnc_lz
-      ", _GRAD_lz_trg],
-/*
       "hint 'LZ erfolgreich!';
-        if (!isNil ""_GRAD_smoke_trg"") then {deleteVehicle _GRAD_smoke_trg};
-        deleteVehicle _GRAD_lz_smoke;
-        deleteMarker str _start_marker_pos;
-        deleteMarker str _GRAD_lz_pos;
-        forman[_GRAD_lz_trg] call GRAD_heligame_fnc_lz;
-        GRAD_smokeTimer = diag_tickTime
-      ",
-*/
+        if (!isNil {thisTrigger getVariable '_GRAD_local_smoke'}) then {deleteVehicle _GRAD_smoke_trg};
+        deleteMarker str {thisTrigger getVariable '_GRAD_local_start_marker'};
+        deleteMarker str {thisTrigger getVariable '_GRAD_local_lz_marker'};
+        GRAD_smokeTimer = diag_tickTime;
+        [thisTrigger] call GRAD_heligame_fnc_lz",
       "this"
     ];
   _GRAD_lz_trg setTriggerTimeout [10, 15, 20, true];
