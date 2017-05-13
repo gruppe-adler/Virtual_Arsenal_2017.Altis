@@ -84,13 +84,12 @@ GRAD_heligame_fnc_smokespawn ={
   // Smoke spawnen.
   _GRAD_lz_smoke = _smokeColor createVehicle _GRAD_lz_pos;
   hint "Smoke is on the deck!";
-
   // Trigger erstellen, um den Smoke zu löschen
   _GRAD_lz_trg = createTrigger ["EmptyDetector", _GRAD_lz_pos];
   _GRAD_lz_trg setTriggerArea [30, 30, 0, false, 30];
   _GRAD_lz_trg setTriggerActivation ["ANY", "PRESENT", false];
-  _GRAD_ls_trg setVariable ["GRAD_local_start_marker", _start_marker];
-  _GRAD_ls_trg setVariable ["GRAD_local_lz_marker", _lz_marker];
+  _GRAD_lz_trg setVariable ["GRAD_local_start_marker", _start_marker];
+  _GRAD_lz_trg setVariable ["GRAD_local_lz_marker", _lz_marker];
   _GRAD_lz_trg setTriggerTimeout [10, 15, 20, true];
   _GRAD_lz_trg setTriggerStatements
     [
