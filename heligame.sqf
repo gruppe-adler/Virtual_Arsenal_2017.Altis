@@ -99,7 +99,7 @@ GRAD_heligame_fnc_smokespawn ={
         hint 'LZ erfolgreich!';
         deleteMarker (thisTrigger getVariable 'GRAD_local_start_marker');
         deleteMarker (thisTrigger getVariable 'GRAD_local_lz_marker');
-        [] call GRAD_heligame_fnc_lz
+        [] call GRAD_heligame_fnc_lz;
         deleteVehicle thisTrigger;
       ",
       "this"
