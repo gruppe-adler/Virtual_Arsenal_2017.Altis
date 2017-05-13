@@ -1,34 +1,32 @@
+GRAD_smokeTimer = diag_tickTime;
+hint "Heligame beginnt!";
+GRAD_Heligame_inProgress = true;
+_GRAD_lz_pos = "";
+_start_marker_pos = "";
+_GRAD_smoke_trg = "";
+_GRAD_lz_trg = "";
+_GRAD_lz_smoke = "";
 
 // Loop, um nach 10 Minuten den Server aufzuräumen.
-GRAD_heligame_fnc_cleanUp = {
-    params ["_waitTime","_objects"];
-    [{
-        {
-            if (_x isEqualType objNull && {!isNull _x}) then {
-                deleteVehicle _x;
-            } else {
-                if (_x isEqualType "") then {
-                    deleteMarker _x;
-                };
-            };
-        } forEach _this;
-    }, _objects, _waitTime] call CBA_fnc_waitAndExecute;
-};
+[
+  {
+  if (diag_tickTime < GRAD_smokeTimer + 600) exitWith {};
 
-GRAD_heligame_fnc_start = {
-    GRAD_heligame_inProgress = true;
-    hint "Heligame beginnt!";
-    [] call GRAD_heligame_fnc_lz;
+  // Alles löschen
+  hint "Heligame ist vorbei!";
+  if (!isNil "_GRAD_smoke_trg") then {deleteVehicle _GRAD_smoke_trg};
+  if (!isNil "_GRAD_lz_trg") then {deleteVehicle _GRAD_lz_trg};
+  if (alive _GRAD_lz_smoke) then {deleteVehicle _GRAD_lz_smoke};
+  deleteMarker str _start_marker_pos;
+  deleteMarker str _GRAD_lz_pos;
+  GRAD_Heligame_inProgress = false;
+  [_handle] call CBA_fnc_removePerFrameHandler;
 
-    [{CBA_missionTime - GRAD_heligame_startTime > 600}, {
-        GRAD_heligame_inProgress = false;
-        hint "Heligame zu Ende!";
-    }, []] call CBA_fnc_waitUntilAndExecute;
-};
+  },1,[]] remoteExec ["CBA_fnc_addPerFrameHandler", -2
+];
 
 GRAD_heligame_fnc_lz ={
-    GRAD_heligame_startTime = CBA_missionTime;
-
+  params ["_GRAD_lz_trg"];
   // Random Position für Smoke suchen.
   _GRAD_lz_pos = [[9300, 17109], random 5000, random 360, 0, [1, 1000]] call SHK_pos;
 
@@ -57,18 +55,14 @@ GRAD_heligame_fnc_lz ={
   _GRAD_smoke_trg setTriggerStatements
   [
     "this",
-    format ["
-       [%1, '%2', '%3'] call GRAD_heligame_fnc_smokespawn;
-       deleteVehicle thisTrigger;
-    ",_GRAD_lz_pos, _start_marker, _lz_marker],
+    format ["if (!isNil {thisTrigger getVariable '_GRAD_localtemp'}) then {deleteVehicle _GRAD_lz_trg};
+    [%1, %2, thisTrigger] call GRAD_fnc_smokespawn", _GRAD_lz_pos, _start_marker_pos],
     "this"
   ];
-
-  [600,[_GRAD_smoke_trg,_start_marker,_lz_marker]] remoteExec ["GRAD_heligame_fnc_cleanUp",2,false];
 };
 
-GRAD_heligame_fnc_smokespawn ={
-  params ["_GRAD_lz_pos", "_start_marker", "_lz_marker"];
+GRAD_fnc_smokespawn ={
+  params ["_GRAD_lz_pos", "_start_marker_pos", "_GRAD_smoke_trg"];
 
   // Zufällige Smokefarbe wählen.
   _smokeColor = selectRandom
@@ -89,21 +83,21 @@ GRAD_heligame_fnc_smokespawn ={
   _GRAD_lz_trg = createTrigger ["EmptyDetector", _GRAD_lz_pos];
   _GRAD_lz_trg setTriggerArea [30, 30, 0, false, 30];
   _GRAD_lz_trg setTriggerActivation ["ANY", "PRESENT", false];
-  _GRAD_ls_trg setVariable ["GRAD_local_start_marker", _start_marker];
-  _GRAD_ls_trg setVariable ["GRAD_local_lz_marker", _lz_marker];
-  _GRAD_lz_trg setTriggerTimeout [10, 15, 20, true];
+  _GRAD_ls_trg setVariable ["_GRAD_local_start_marker", _start_marker_pos];
+  _GRAD_ls_trg setVariable ["_GRAD_local_lz_marker", _GRAD_lz_pos];
+  _GRAD_lz_trg setVariable ["_GRAD_local_smoke", _GRAD_smoke_trg];
   _GRAD_lz_trg setTriggerStatements
     [
       "this",
-      "
-        hint 'LZ erfolgreich!';
-        deleteMarker (thisTrigger getVariable 'GRAD_local_start_marker');
-        deleteMarker (thisTrigger getVariable 'GRAD_local_lz_marker');
-        [] call GRAD_heligame_fnc_lz
-        deleteVehicle thisTrigger;
-      ",
+      "hint 'LZ erfolgreich!';
+        if (!isNil {thisTrigger getVariable '_GRAD_local_smoke'}) then {deleteVehicle _GRAD_smoke_trg};
+        deleteMarker str {thisTrigger getVariable '_GRAD_local_start_marker'};
+        deleteMarker str {thisTrigger getVariable '_GRAD_local_lz_marker'};
+        GRAD_smokeTimer = diag_tickTime;
+        [thisTrigger] call GRAD_heligame_fnc_lz",
       "this"
     ];
-
-  [600,[_GRAD_lz_trg]] remoteExec ["GRAD_heligame_fnc_cleanUp",2,false];
+  _GRAD_lz_trg setTriggerTimeout [10, 15, 20, true];
 };
+
+call GRAD_heligame_fnc_lz;
