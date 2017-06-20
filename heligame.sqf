@@ -38,6 +38,7 @@ GRAD_heligame_fnc_lz ={
   _start_marker SetMarkerShape "ICON";
   _start_marker setMarkerType "hd_start";
   _start_marker setMarkerColor "colorBLUFOR";
+  _start_marker setMarkerText name player;
 
   // Orientieren des Startmarkers in die richtige Richtung
   _marker_winkel = player getDir _GRAD_lz_pos;
@@ -48,6 +49,7 @@ GRAD_heligame_fnc_lz ={
   _lz_marker setMarkerShape "ICON";
   _lz_marker setMarkerType "hd_pickup";
   _lz_marker setMarkerColor "colorBLUFOR";
+  _lz_marker setMarkerText name player;
 
   // Trigger erstellen, um Smoke zu werfen.
   _GRAD_smoke_trg = createTrigger ["EmptyDetector", _GRAD_lz_pos];
