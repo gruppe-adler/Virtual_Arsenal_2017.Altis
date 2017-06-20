@@ -56,7 +56,7 @@ GRAD_heligame_fnc_lz ={
 
   // Trigger erstellen, um Smoke zu werfen.
   _GRAD_smoke_trg = createTrigger ["EmptyDetector", _GRAD_lz_pos];
-  _GRAD_smoke_trg setTriggerArea [2000, 2000, 0, false, 500];
+  _GRAD_smoke_trg setTriggerArea [1500, 1500, 0, false, 500];
   _GRAD_smoke_trg setTriggerActivation ["ANY", "PRESENT", false];
   _GRAD_smoke_trg setVariable ["_GRAD_localtemp", _GRAD_lz_trg];
   _GRAD_smoke_trg setTriggerStatements
@@ -101,7 +101,7 @@ GRAD_heligame_fnc_smokespawn ={
     [
       "this",
       "
-        ['TaskSucceeded',['','Flieg da hin!']] call BIS_fnc_showNotification;
+        ['TaskSucceeded',['','LZ abgeschlossen!']] call BIS_fnc_showNotification;
         deleteMarker (thisTrigger getVariable 'GRAD_local_start_marker');
         deleteMarker (thisTrigger getVariable 'GRAD_local_lz_marker');
         [] call GRAD_heligame_fnc_lz;
