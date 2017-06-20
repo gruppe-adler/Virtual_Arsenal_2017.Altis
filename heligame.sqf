@@ -29,8 +29,8 @@ GRAD_heligame_fnc_start = {
 GRAD_heligame_fnc_lz ={
     GRAD_heligame_startTime = CBA_missionTime;
 
-  // Random Position für Smoke suchen.
-  _GRAD_lz_pos = [[9300, 17109], random 5000, random 360, 0, [1, 1000]] call SHK_pos;
+  // Random Position für LZ suchen.
+  _GRAD_lz_pos = [[9300, 17109], random 5000, random 360, 0, [1, 200]] call SHK_pos;
 
   // Marker auf die Startposition setzen.
   _start_marker_pos = getpos player;
@@ -51,6 +51,9 @@ GRAD_heligame_fnc_lz ={
   _lz_marker setMarkerColor "colorBLUFOR";
   _lz_marker setMarkerText name player;
 
+  // Task für den Spieler erstellen
+  ["TaskAssigned",["LZ","Flieg zur LZ!"]] call BIS_fnc_showNotification;
+
   // Trigger erstellen, um Smoke zu werfen.
   _GRAD_smoke_trg = createTrigger ["EmptyDetector", _GRAD_lz_pos];
   _GRAD_smoke_trg setTriggerArea [2000, 2000, 0, false, 500];
@@ -70,7 +73,7 @@ GRAD_heligame_fnc_lz ={
 };
 
 GRAD_heligame_fnc_smokespawn ={
-  params ["_GRAD_lz_pos", "_start_marker", "_lz_marker"];
+  params ["_GRAD_lz_pos", "_start_marker", "_lz_marker", "_lz_task"];
 
   // Zufällige Smokefarbe wählen.
   _smokeColor = selectRandom
@@ -98,7 +101,7 @@ GRAD_heligame_fnc_smokespawn ={
     [
       "this",
       "
-        hint 'LZ erfolgreich!';
+        ['TaskSucceeded',['','Flieg da hin!']] call BIS_fnc_showNotification;
         deleteMarker (thisTrigger getVariable 'GRAD_local_start_marker');
         deleteMarker (thisTrigger getVariable 'GRAD_local_lz_marker');
         [] call GRAD_heligame_fnc_lz;
