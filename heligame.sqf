@@ -29,8 +29,8 @@ GRAD_heligame_fnc_start = {
 GRAD_heligame_fnc_lz ={
     GRAD_heligame_startTime = CBA_missionTime;
 
-  // Random Position für Smoke suchen.
-  _GRAD_lz_pos = [[9300, 17109], random 5000, random 360, 0, [1, 1000]] call SHK_pos;
+  // Random Position für LZ suchen.
+  _GRAD_lz_pos = [[9300, 17109], random 5000, random 360, 0, [1, 200]] call SHK_pos;
 
   // Marker auf die Startposition setzen.
   _start_marker_pos = getpos player;
@@ -38,6 +38,7 @@ GRAD_heligame_fnc_lz ={
   _start_marker SetMarkerShape "ICON";
   _start_marker setMarkerType "hd_start";
   _start_marker setMarkerColor "colorBLUFOR";
+  _start_marker setMarkerText name player;
 
   // Orientieren des Startmarkers in die richtige Richtung
   _marker_winkel = player getDir _GRAD_lz_pos;
@@ -48,10 +49,14 @@ GRAD_heligame_fnc_lz ={
   _lz_marker setMarkerShape "ICON";
   _lz_marker setMarkerType "hd_pickup";
   _lz_marker setMarkerColor "colorBLUFOR";
+  _lz_marker setMarkerText name player;
+
+  // Task für den Spieler erstellen
+  ["TaskAssigned",["LZ","Flieg zur LZ!"]] call BIS_fnc_showNotification;
 
   // Trigger erstellen, um Smoke zu werfen.
   _GRAD_smoke_trg = createTrigger ["EmptyDetector", _GRAD_lz_pos];
-  _GRAD_smoke_trg setTriggerArea [1000, 1000, 0, false, 500];
+  _GRAD_smoke_trg setTriggerArea [1500, 1500, 0, false, 500];
   _GRAD_smoke_trg setTriggerActivation ["ANY", "PRESENT", false];
   _GRAD_smoke_trg setVariable ["_GRAD_localtemp", _GRAD_lz_trg];
   _GRAD_smoke_trg setTriggerStatements
@@ -84,6 +89,7 @@ GRAD_heligame_fnc_smokespawn ={
   // Smoke spawnen.
   _GRAD_lz_smoke = _smokeColor createVehicle _GRAD_lz_pos;
   hint "Smoke is on the deck!";
+
   // Trigger erstellen, um den Smoke zu löschen
   _GRAD_lz_trg = createTrigger ["EmptyDetector", _GRAD_lz_pos];
   _GRAD_lz_trg setTriggerArea [30, 30, 0, false, 30];
@@ -95,7 +101,7 @@ GRAD_heligame_fnc_smokespawn ={
     [
       "this",
       "
-        hint 'LZ erfolgreich!';
+        ['TaskSucceeded',['','LZ abgeschlossen!']] call BIS_fnc_showNotification;
         deleteMarker (thisTrigger getVariable 'GRAD_local_start_marker');
         deleteMarker (thisTrigger getVariable 'GRAD_local_lz_marker');
         [] call GRAD_heligame_fnc_lz;
