@@ -73,7 +73,7 @@ GRAD_heligame_fnc_lz ={
 };
 
 GRAD_heligame_fnc_smokespawn ={
-  params ["_GRAD_lz_pos", "_start_marker", "_lz_marker", "_lz_task"];
+  params ["_GRAD_lz_pos", "_start_marker", "_lz_marker"];
 
   // Zufällige Smokefarbe wählen.
   _smokeColor = selectRandom
