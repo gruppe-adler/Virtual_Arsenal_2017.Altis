@@ -3,6 +3,7 @@ Generates random LZs to practice your landing skills.
 
 ## Dependencies
 * [SHK pos](https://forums.bistudio.com/forums/topic/153382-shk_pos/)
+* [CBA_A3](https://github.com/CBATeam/CBA_A3)
 
 ## Installation
 1. Copy heligame folder and contents to your mission
