@@ -15,14 +15,15 @@ enableDebugConsole = 1;
 
 #include "node_modules\grad-customGear\saveDialog\dialog.hpp"
 class CfgFunctions {
-  #include "node_modules\grad-customGear\cfgFunctions.hpp"
+    #include "node_modules\grad-customGear\cfgFunctions.hpp"
+    #include "heligame\cfgFunctions.hpp"
 };
 
 class grad_customGear {
-  allowHelmet = 0;
-  allowGoggles = 0;
-  allowSimpleScopes = 0;
-  allowMagnifyingScopes = 0;
-  allowMarksmanScopes = 0;
-  actionsOnMissionStart = 0;
+    allowHelmet = 0;
+    allowGoggles = 0;
+    allowSimpleScopes = 0;
+    allowMagnifyingScopes = 0;
+    allowMarksmanScopes = 0;
+    actionsOnMissionStart = 0;
 };

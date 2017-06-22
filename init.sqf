@@ -1,3 +1,4 @@
+call compile preprocessfilelinenumbers "SHK_pos\shk_pos_init.sqf";
 
 [] execVM "grenadeStop.sqf";
 [] execvm "protectzone.sqf";
@@ -25,9 +26,5 @@ if (hasInterface) then {
 };
 */
 
-// Init für Heligame
-call compile preprocessfilelinenumbers "SHK_pos\shk_pos_init.sqf";
-call compile preprocessfilelinenumbers "heligame.sqf";
-GRAD_Heligame_inProgress = false;
 
 AR3PLAY_ENABLE_REPLAY = false;
